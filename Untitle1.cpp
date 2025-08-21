@@ -1,24 +1,19 @@
 #include<bits/stdc++.h>
 #define int long long
 using namespace std;
-int n,k,a[1000010];
-deque<int>q;
+int n,f[110][110],a[110],ans;
 signed main(){
-	cin>>n>>k;
+	cin>>n;
 	for(int i=1;i<=n;i++)
-		cin>>a[i];
-	for(int i=1;i<=n;i++){
-		while(!q.empty()&&q.front()<i-k+1)q.pop_front();
-		while(!q.empty()&&a[q.back()]>=a[i])q.pop_back();
-		q.push_back(i);
-		if(i>=k)cout<<a[q.front()]<<" ";
+		cin>>a[i],f[i][1]=a[i];
+	for(int j=2;j<=n;j++){
+		for(int i=1;i<=n-j+1;i++){
+			f[i][j]=j*abs(a[i]-a[i+j-1]);
+			for(int k=1;k<j;k++)
+				f[i][j]=max(f[i][j],f[i][k]+f[k+i][j-k]);
+		}
 	}
-	cout<<endl,q.clear();
-	for(int i=1;i<=n;i++){
-		while(!q.empty()&&q.front()<i-k+1)q.pop_front();
-		while(!q.empty()&&a[q.back()]<=a[i])q.pop_back();
-		q.push_back(i);
-		if(i>=k)cout<<a[q.front()]<<" ";
-	}
+	for(int i=1;i<=n;i++)ans=max(ans,f[i][n]);
+	cout<<ans;
 	return 0;
 }
